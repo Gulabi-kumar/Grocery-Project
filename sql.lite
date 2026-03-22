@@ -1,0 +1,596 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 22, 2026 at 08:15 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `grocery_store`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT 1,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
+(21, 2, 30, 1, '2026-03-22 07:05:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `description`, `image`, `created_at`) VALUES
+(1, 'Fruits & Vegetables', 'Fresh fruits and organic vegetables', 'fruits-veg.jpg', '2026-02-12 11:21:39'),
+(2, 'Dairy & Eggs', 'Milk, cheese, butter, and eggs', 'Dairy&Eggs.jpg', '2026-02-12 11:21:39'),
+(3, 'Bakery', 'Fresh bread, cakes, and pastries', 'bakery.jpg', '2026-02-12 11:21:39'),
+(4, 'Beverages', 'Juices, soft drinks, tea, coffee', 'beverages.jpg', '2026-02-12 11:21:39'),
+(5, 'Meat & Poultry', 'Fresh meat, chicken, and seafood', 'meat&poultry.jpg', '2026-02-12 11:21:39'),
+(6, 'Snacks', 'Chips, cookies, chocolates', 'snacks.jpg', '2026-02-12 11:21:39'),
+(7, 'Cooking Essentials', 'Oil, spices, rice, flour', 'cooking.jpg', '2026-02-12 11:21:39'),
+(8, 'Frozen Foods', 'Frozen vegetables, meals, ice cream', 'frozen-food.jpg', '2026-02-12 11:21:39'),
+(9, 'Personal Care', 'Soap, shampoo, toothpaste', 'personal-care.jpg', '2026-02-12 11:21:39'),
+(10, 'Cleaning Supplies', 'Detergents, cleaners, tissues', 'cleaning.jpg', '2026-02-12 11:21:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `discount_type` enum('percentage','fixed') DEFAULT 'percentage',
+  `discount_value` decimal(10,2) NOT NULL,
+  `min_order` decimal(10,2) DEFAULT 0.00,
+  `max_discount` decimal(10,2) DEFAULT NULL,
+  `valid_from` date DEFAULT NULL,
+  `valid_to` date DEFAULT NULL,
+  `usage_limit` int(11) DEFAULT 100,
+  `used_count` int(11) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`id`, `code`, `discount_type`, `discount_value`, `min_order`, `max_discount`, `valid_from`, `valid_to`, `usage_limit`, `used_count`, `is_active`, `created_at`) VALUES
+(1, 'WELCOME10', 'percentage', 10.00, 300.00, 100.00, '2026-02-10', '2026-02-20', 100, 0, 1, '2026-02-12 12:44:59'),
+(2, 'SAVE50', 'fixed', 50.00, 300.00, 0.00, '2024-02-09', '2027-12-20', 50, 0, 1, '2026-02-12 12:44:59'),
+(3, 'FREESHIP', 'percentage', 15.00, 1000.00, 150.00, '2026-02-10', '2026-06-20', 200, 0, 1, '2026-02-12 12:44:59'),
+(4, 'FRESH20', 'percentage', 20.00, 800.00, 200.00, '2024-02-01', '2026-07-22', 75, 0, 1, '2026-02-12 12:44:59'),
+(5, 'FLAT100', 'fixed', 100.00, 600.00, 0.00, '2026-01-24', '2026-12-20', 150, 0, 1, '2026-02-12 12:44:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `subject` varchar(200) DEFAULT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `replied` tinyint(1) DEFAULT 0,
+  `date_sent` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `name`, `email`, `subject`, `message`, `is_read`, `replied`, `date_sent`) VALUES
+(1, 'Sumit', 'sumit@gmail.com', 'Delivery Query', 'When will my order be delivered?', 1, 1, '2026-02-12 11:33:27'),
+(2, 'vivek', 'vivek@gmail.com', 'Product Quality', 'The apples were very fresh, thank you!', 1, 0, '2026-02-12 11:33:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_replies`
+--
+
+CREATE TABLE `message_replies` (
+  `id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `subject` varchar(200) DEFAULT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `message_replies`
+--
+
+INSERT INTO `message_replies` (`id`, `message_id`, `admin_id`, `subject`, `message`, `created_at`) VALUES
+(1, 1, 1, 'Re: Delivery Query', 'today 7 pm ', '2026-03-22 07:11:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `order_number` varchar(20) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `shipping_address` text NOT NULL,
+  `billing_address` text DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `status` enum('pending','confirmed','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `payment_method` enum('cod','card','paypal') DEFAULT 'cod',
+  `payment_status` enum('pending','completed','failed') DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `delivery_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `order_number`, `user_id`, `total_price`, `shipping_address`, `billing_address`, `phone`, `email`, `status`, `payment_method`, `payment_status`, `notes`, `order_date`, `delivery_date`) VALUES
+(6, 'ORD17708993486484', 2, 5.89, 'indrapuri 2A, patliputra, 800024, bihar', NULL, NULL, NULL, 'pending', 'cod', 'pending', NULL, '2026-02-12 12:29:08', NULL),
+(7, 'ORD17740344806547', 2, 36.57, 'indrapuri 2a, patliputra, 800024, bihar', NULL, NULL, NULL, 'pending', 'cod', 'pending', NULL, '2026-03-20 19:21:20', NULL),
+(8, 'ORD17740349582465', 2, 331.57, 'patna, jamui, 811316, Bihar', NULL, NULL, NULL, 'pending', 'cod', 'pending', NULL, '2026-03-20 19:29:18', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(200) DEFAULT NULL,
+  `product_price` decimal(10,2) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `subtotal` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `product_price`, `quantity`, `subtotal`) VALUES
+(1, 6, 24, 'Dark Chocolate', 4.99, 1, 4.99),
+(2, 7, 13, 'Croissants', 30.99, 1, 30.99),
+(3, 8, 28, 'Black Pepper', 280.99, 1, 280.99);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_tracking`
+--
+
+CREATE TABLE `order_tracking` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `tracking_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `slug` varchar(200) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `old_price` decimal(10,2) DEFAULT NULL,
+  `image` varchar(255) NOT NULL DEFAULT 'default-product.jpg',
+  `category_id` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `details` text DEFAULT NULL,
+  `stock` int(11) DEFAULT 100,
+  `unit` varchar(20) DEFAULT 'piece',
+  `weight` varchar(20) DEFAULT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `rating` decimal(3,2) DEFAULT 0.00,
+  `total_reviews` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `slug`, `price`, `old_price`, `image`, `category_id`, `description`, `details`, `stock`, `unit`, `weight`, `brand`, `is_featured`, `rating`, `total_reviews`, `created_at`) VALUES
+(1, 'Fresh Red Apples', 'fresh-red-apples', 180.99, 190.49, 'apple.jpg', 1, 'Sweet and crispy red apples, perfect for snacking', 'Organic, No pesticides, Rich in fiber', 150, 'kg', '1kg', 'Fresh Farms', 1, 4.50, 0, '2026-02-12 11:21:39'),
+(2, 'Bananas - Bunch', 'bananas-bunch', 47.49, 50.99, 'banana.jpg', 1, 'Fresh yellow bananas, rich in potassium', 'Perfectly ripe, Imported, High in energy', 200, 'bunch', '6 pieces', 'Tropical Fruits', 1, 4.30, 0, '2026-02-12 11:21:39'),
+(3, 'Fresh Carrots', 'fresh-carrots', 55.99, 60.49, 'carrot.jpg', 1, 'Organic fresh carrots, great for salads and cooking', 'Organic, Vitamin A rich, Crunchy texture', 180, 'kg', '1kg', 'Organic Valley', 0, 4.20, 0, '2026-02-12 11:21:39'),
+(4, 'Broccoli', 'broccoli', 45.49, 48.99, 'broccoli.jpg', 1, 'Fresh green broccoli florets', 'Rich in vitamins, Low calorie, High fiber', 120, 'piece', '500g', 'Green Fields', 1, 4.40, 0, '2026-02-12 11:21:39'),
+(5, 'Strawberries', 'strawberries', 40.99, 50.99, 'strawberry.jpg', 1, 'Sweet and juicy strawberries', 'Antioxidant rich, Perfect for desserts', 80, 'pack', '500g', 'Berry Fresh', 1, 4.70, 0, '2026-02-12 11:21:39'),
+(6, 'Potatoes', 'potatoes', 20.29, 23.79, 'potato.jpg', 1, 'Fresh potatoes for all your cooking needs', 'Versatile, Long shelf life, Energy rich', 250, 'kg', '2kg', 'Farm Fresh', 0, 4.10, 0, '2026-02-12 11:21:39'),
+(7, 'Fresh Milk', 'fresh-milk', 59.49, 63.99, 'milk.jpg', 2, 'Fresh whole milk 1 liter', 'Pasteurized, Vitamin D added, Creamy', 100, 'bottle', '1L', 'Dairy Pure', 1, 4.60, 0, '2026-02-12 11:21:39'),
+(8, 'Eggs - Dozen', 'eggs-dozen', 100.99, 109.49, 'eggs.jpg', 2, 'Farm fresh eggs, 12 pieces', 'Free range, Rich in protein, Large size', 0, 'dozen', '700g', 'Happy Hens', 1, 4.50, 0, '2026-02-12 11:21:39'),
+(9, 'Cheddar Cheese', 'cheddar-cheese', 88.99, 90.49, 'cheese.jpg', 2, 'Aged cheddar cheese block', 'Aged 6 months, Sharp flavor, Perfect for sandwiches', 75, 'block', '400g', 'Cheese Masters', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(10, 'Butter', 'butter', 80.99, 78.49, 'butter.jpg', 2, 'Salted butter, perfect for cooking', 'Creamy, Rich flavor, No additives', 90, 'pack', '250g', 'Butter Best', 0, 4.30, 0, '2026-02-12 11:21:39'),
+(11, 'Greek Yogurt', 'greek-yogurt', 50.99, 53.49, 'yogurt.jpg', 2, 'Creamy Greek yogurt, high in protein', 'High protein, Low fat, Probiotic', 110, 'cup', '500g', 'Yogo', 1, 4.60, 0, '2026-02-12 11:21:39'),
+(12, 'Fresh Bread', 'fresh-bread', 25.49, 30.99, 'breads.jpg', 3, 'Freshly baked white bread loaf', 'Soft, Fresh daily, No preservatives', 60, 'loaf', '400g', 'Bread House', 1, 4.40, 0, '2026-02-12 11:21:39'),
+(13, 'Croissants', 'croissants', 30.99, 40.49, 'croissant.jpg', 3, 'Buttery French croissants', 'Flaky, Buttery, Perfect for breakfast', 45, 'pack', '4 pieces', 'French Bakery', 1, 4.70, 0, '2026-02-12 11:21:39'),
+(14, 'Chocolate Cake', 'chocolate-cake', 120.99, 140.99, 'cake.jpg', 3, 'Decadent chocolate cake', 'Rich chocolate, Moist, Creamy frosting', 20, 'cake', '1kg', 'Sweet Delights', 1, 4.80, 0, '2026-02-12 11:21:39'),
+(15, 'Bagels', 'bagels', 27.49, 30.99, 'bagel.jpg', 3, 'Fresh plain bagels, 6 pieces', 'Chewy, Perfect for toasting, Versatile', 0, 'pack', '6 pieces', 'Bagel Co', 0, 4.30, 0, '2026-02-12 11:21:39'),
+(16, 'Orange Juice', 'orange-juice', 47.99, 55.49, 'orange-juice.jpg', 4, '100% pure orange juice, no added sugar', 'Fresh squeezed, Vitamin C rich, No pulp', 85, 'bottle', '1L', 'Juice Co', 1, 4.50, 0, '2026-02-12 11:21:39'),
+(17, 'Coffee Beans', 'coffee-beans', 80.99, 90.99, 'coffee.jpg', 4, 'Premium Arabica coffee beans', 'Dark roast, Rich aroma, Freshly roasted', 40, 'pack', '500g', 'Coffee Masters', 1, 4.60, 0, '2026-02-12 11:21:39'),
+(18, 'Green Tea', 'green-tea', 80.99, 83.99, 'tea.jpg', 4, 'Organic green tea bags', 'Antioxidant rich, Refreshing, 50 bags', 5, 'box', '100g', 'Tea Leaf', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(19, 'Cola - 6 Pack', 'cola-6-pack', 50.99, 60.49, 'coca-cola-6pack.jpg', 4, 'Classic cola, 6 cans', 'Refreshing, Classic taste, 330ml cans', 120, 'pack', '6 cans', 'Cola Co', 0, 4.20, 0, '2026-02-12 11:21:39'),
+(20, 'Chicken Breast', 'chicken-breast', 158.99, 170.99, 'chicken.jpg', 5, 'Boneless skinless chicken breast', 'Lean protein, Fresh, Hormone free', 65, 'kg', '1kg', 'Farm Fresh', 1, 4.50, 0, '2026-02-12 11:21:39'),
+(21, 'Potato Chips', 'potato-chips', 20.99, 25.49, 'chips.jpg', 6, 'Crunchy potato chips, original flavor', 'Crispy, Lightly salted, No artificial colors', 2, 'bag', '150g', 'Chip Co', 1, 4.30, 0, '2026-02-12 11:21:39'),
+(22, 'Chocolate Cookies', 'chocolate-cookies', 109.49, 115.99, 'cookies.jpg', 6, 'Chocolate chip cookies, soft baked', 'Chewy, Rich chocolate, Family pack', 0, 'pack', '300g', 'Cookie House', 1, 4.60, 0, '2026-02-12 11:21:39'),
+(23, 'Mixed Nuts', 'mixed-nuts', 120.99, 125.99, 'mix-nuts.jpg', 6, 'Assorted mixed nuts, salted', 'Almonds, Cashews, Walnuts, Protein rich', 90, 'jar', '500g', 'Nutty', 0, 4.50, 0, '2026-02-12 11:21:39'),
+(24, 'Dark Chocolate', 'dark-chocolate', 40.99, 50.49, 'dark-chocolate.jpg', 6, 'Premium dark chocolate, 70% cocoa', 'Antioxidant rich, Bitter sweet, No added sugar', 110, 'bar', '200g', 'Choco Delight', 1, 4.70, 0, '2026-02-12 11:21:39'),
+(25, 'Olive Oil', 'olive-oil', 90.99, 110.99, 'olive-oil.jpg', 7, 'Extra virgin olive oil', 'Cold pressed, Rich flavor, Heart healthy', 70, 'bottle', '1L', 'Olive Masters', 1, 4.60, 0, '2026-02-12 11:21:39'),
+(26, 'Basmati Rice', 'basmati-rice', 479.99, 512.99, 'basmati-rice.jpg', 7, 'Premium basmati rice, long grain', 'Aromatic, Non-sticky, Perfect for biryani', 10, 'bag', '2kg', 'Rice Co', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(27, 'Himalayan Salt', 'himalayan-salt', 50.99, 53.49, 'himalayan-salt.jpg', 7, 'Pure Himalayan pink salt', 'Mineral rich, Natural, Fine grain', 0, 'jar', '500g', 'Salt Pure', 0, 4.30, 0, '2026-02-12 11:21:39'),
+(28, 'Black Pepper', 'black-pepper', 280.99, 289.49, 'black-pepper.jpg', 7, 'Whole black peppercorns', 'Freshly ground, Aromatic, Hot flavor', 5, 'jar', '100g', 'Spice World', 0, 4.20, 0, '2026-02-12 11:21:39'),
+(29, 'Frozen Peas', 'frozen-peas', 50.49, 55.99, 'frozen-peas.jpg', 8, 'Frozen green peas', 'Flash frozen, Nutrient preserved, Easy to cook', 0, 'bag', '500g', 'Frozen Fresh', 0, 4.30, 0, '2026-02-12 11:21:39'),
+(30, 'Ice Cream', 'ice-cream', 50.99, 58.99, 'ice-cream.jpg', 8, 'Vanilla ice cream, family tub', 'Creamy, Rich vanilla flavor, 2L tub', 60, 'tub', '2L', 'Creamy Delights', 1, 4.80, 0, '2026-02-12 11:21:39'),
+(31, 'Frozen Pizza', 'frozen-pizza', 143.99, 155.99, 'frozen-pizza.jpg', 8, 'Pepperoni frozen pizza', 'Ready to bake, Cheesy, Family size', 45, 'pizza', '800g', 'Pizza Co', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(32, 'Shampoo', 'shampoo', 60.99, 70.99, 'shampoo.jpg', 9, 'Moisturizing shampoo for all hair types', 'Sulfate free, Natural extracts, 500ml', 85, 'bottle', '500ml', 'Care Plus', 0, 4.50, 0, '2026-02-12 11:21:39'),
+(33, 'Toothpaste', 'toothpaste', 89.99, 93.49, 'toothpaste.jpg', 9, 'Fluoride toothpaste, mint flavor', 'Cavity protection, Fresh breath, 100ml', 200, 'tube', '100ml', 'Smile Fresh', 0, 4.30, 0, '2026-02-12 11:21:39'),
+(34, 'Hand Soap', 'hand-soap', 30.49, 38.99, 'hand-soap.jpg', 9, 'Liquid hand soap, antibacterial', 'Moisturizing, Kills germs, Refillable', 15, 'bottle', '300ml', 'Clean Hands', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(35, 'Laundry Detergent', 'laundry-detergent', 80.99, 90.99, 'laundry-detergent.jpg', 10, 'Liquid laundry detergent, 2L', 'Tough on stains, Fresh scent, 32 loads', 75, 'bottle', '2L', 'Clean Wash', 0, 4.50, 0, '2026-02-12 11:21:39'),
+(36, 'Dish Soap', 'dish-soap', 10.99, 12.49, 'dish-soap.jpg', 10, 'Lemon dishwashing liquid', 'Cuts grease, Fresh lemon scent, 500ml', 180, 'bottle', '500ml', 'Sparkle', 0, 4.40, 0, '2026-02-12 11:21:39'),
+(37, 'Paper Towels', 'paper-towels', 35.49, 45.99, 'paper-towels.jpg', 10, '2-ply paper towels, 6 rolls', 'Absorbent, Strong, 6 roll pack', 140, 'pack', '6 rolls', 'Soft Touch', 0, 4.30, 0, '2026-02-12 11:21:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) DEFAULT NULL CHECK (`rating` >= 1 and `rating` <= 5),
+  `comment` text DEFAULT NULL,
+  `is_approved` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `product_id`, `user_id`, `rating`, `comment`, `is_approved`, `created_at`) VALUES
+(1, 24, 2, 5, 'Very fresh and sweet chocalate!', 1, '2026-02-12 13:42:10'),
+(8, 24, 2, 4, 'kdk', 0, '2026-02-12 15:27:04'),
+(9, 24, 2, 4, 'kdk', 0, '2026-02-12 15:27:38'),
+(10, 24, 2, 2, 'wast of money', 0, '2026-02-12 15:46:25'),
+(11, 24, 2, 2, 'wast of money', 0, '2026-02-12 15:48:16'),
+(12, 24, 2, 2, 'wast of money', 0, '2026-02-12 15:48:55'),
+(13, 24, 2, 2, 'wast of money', 0, '2026-02-12 15:51:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT 'default.png',
+  `role` enum('user','admin') DEFAULT 'user',
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `image`, `role`, `phone`, `address`, `created_at`) VALUES
+(1, 'Admin User', 'admin@freshgrocer.com', '$2y$10$cC8kcO70hpeBgQBhe6hENecU8V/.eO0.WcRAtWqC013vjkv8NVDHy', 'admin.jpg', 'admin', '+91 9608783528', '800024 Indrapuri 2A, Patliputra Patna', '2026-02-12 11:21:39'),
+(2, 'Amit', 'amit@gmail.com', '$2y$10$/fjmMNBbR23LMdL7VN3o.uf/1/bkSl6fQ45MJoyHLWoIM5xFHY8WS', '1770899380_bakery.jpg', 'user', '+91 8393748274', '800012 , Rajiv Nagar 2A, Patliputra Patna ', '2026-02-12 11:21:39'),
+(3, 'Sumit', 'sumit@gmail.com', '$2y$10$/fjmMNBbR23LMdL7VN3o.uf/1/bkSl6fQ45MJoyHLWoIM5xFHY8WS', 'user2.jpg', 'user', '+91 9873827482', '800013 ,Vikash Nagar 10C,Patliputra Patna', '2026-02-12 11:21:39'),
+(4, 'Vivek', 'vivek@gmail.com', '$2y$10$/fjmMNBbR23LMdL7VN3o.uf/1/bkSl6fQ45MJoyHLWoIM5xFHY8WS', 'user3.jpg', 'user', '+91 8284739274', '800011 Raza Bazar , 1B,Patliputra Patna', '2026-02-12 11:21:39'),
+(5, 'Soni', 'soni@gmail.com', '$2y$10$/fjmMNBbR23LMdL7VN3o.uf/1/bkSl6fQ45MJoyHLWoIM5xFHY8WS', 'user4.jpg', 'user', '+91 9199837482', '800010, Patna City , 2A ,Patna Junction', '2026-02-12 11:21:39'),
+(6, 'Sharvan', 'sharvan@gmail.com', '$2y$10$/fjmMNBbR23LMdL7VN3o.uf/1/bkSl6fQ45MJoyHLWoIM5xFHY8WS', 'user5.jpg', 'user', '+91 7783784284', '800001 ,Bazar Smiti ,1D, Rajendra Nagar Patna', '2026-02-12 11:21:39'),
+(7, 'raj', 'raj@gmail.com', '$2y$10$cC8kcO70hpeBgQBhe6hENecU8V/.eO0.WcRAtWqC013vjkv8NVDHy', 'default.png', 'user', '9388393834', NULL, '2026-03-20 18:01:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wishlist`
+--
+
+CREATE TABLE `wishlist` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_cart_item` (`user_id`,`product_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `message_replies`
+--
+ALTER TABLE `message_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `message_id` (`message_id`),
+  ADD KEY `admin_id` (`admin_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `order_number` (`order_number`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `order_tracking`
+--
+ALTER TABLE `order_tracking`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_wishlist_item` (`user_id`,`product_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `message_replies`
+--
+ALTER TABLE `message_replies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `order_tracking`
+--
+ALTER TABLE `order_tracking`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `message_replies`
+--
+ALTER TABLE `message_replies`
+  ADD CONSTRAINT `message_replies_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`),
+  ADD CONSTRAINT `message_replies_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `order_tracking`
+--
+ALTER TABLE `order_tracking`
+  ADD CONSTRAINT `order_tracking_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `wishlist`
+--
+ALTER TABLE `wishlist`
+  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
