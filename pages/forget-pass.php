@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
                 ]
             ];
 
-            $mail->setFrom('omg191883@gmail.com', 'Fresh Grocery');
+            $mail->setFrom('workshopit26@gmail.com', 'Fresh Grocery');
             $mail->addAddress($email);
 
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
