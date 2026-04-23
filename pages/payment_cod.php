@@ -315,9 +315,8 @@ if (!empty($email) && $product) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-
-        $mail->Username = 'omg191883@gmail.com';
-        $mail->Password = 'ysrxidzntkaefilm';
+        $mail->Username = 'workshopit26@gmail.com';
+        $mail->Password = 'enlrdzmtwnavfmmr';
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
@@ -331,7 +330,7 @@ if (!empty($email) && $product) {
             ]
         ];
 
-        $mail->setFrom('omg191883@gmail.com', 'Fresh Grocery');
+        $mail->setFrom('workshopit26@gmail.com', 'Fresh Grocery');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
