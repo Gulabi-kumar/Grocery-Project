@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
             $mail->SMTPAuth = true;
 
             $mail->Username = 'workshopit26@gmail.com';
-            $mail->Password = 'enlrdzmtwnavfmmr';
+            $mail->Password = '';
 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
